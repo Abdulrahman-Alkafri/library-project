@@ -1,5 +1,6 @@
 package org.example.library.Services;
 
+import org.example.library.DTO.PatronDTOWithoutPassword;
 import org.example.library.DTO.UpdatePatronDTO;
 import org.example.library.Models.Patron;
 import org.example.library.Repositories.PatronRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatronService {
@@ -35,13 +37,17 @@ public class PatronService {
     }
 
     @Cacheable(value = "patrons")
-    public List<Patron> findAll() {
-        return patronRepository.findAll();
+    public List<PatronDTOWithoutPassword> findAll() {
+        List<Patron> patrons = patronRepository.findAll();
+        return patrons.stream()
+                .map(patron -> new PatronDTOWithoutPassword(patron.getId(),patron.getEmail(), patron.getName(), patron.getBorrowingRecords()))
+                .collect(Collectors.toList());
     }
 
     @Cacheable(value = "patrons", key = "#id")
-    public Optional<Patron> findById(Long id) {
-        return patronRepository.findById(id);
+    public Optional<PatronDTOWithoutPassword> findById(Long id) {
+        return patronRepository.findById(id).map(patron ->
+                new PatronDTOWithoutPassword(patron.getId(),patron.getEmail(), patron.getName(), patron.getBorrowingRecords()));
     }
 
     @CacheEvict(value = "books", allEntries = true)
@@ -51,7 +57,7 @@ public class PatronService {
     }
 
     @CacheEvict(value = "books", allEntries = true)
-    public Optional<Patron> updatePatron(Long id, UpdatePatronDTO updatedPatron) {
+    public Optional<PatronDTOWithoutPassword> updatePatron(Long id, UpdatePatronDTO updatedPatron) {
         return patronRepository.findById(id)
                 .map(existingPatron -> {
                     // Update fields if they are not null in the updatedPatron
@@ -61,7 +67,8 @@ public class PatronService {
                     if (updatedPatron.getEmail() != null) {
                         existingPatron.setEmail(updatedPatron.getEmail());
                     }
-                    return patronRepository.save(existingPatron);
+                    Patron savedPatron = patronRepository.save(existingPatron);
+                    return new PatronDTOWithoutPassword(savedPatron.getId(),savedPatron.getEmail(), savedPatron.getName(), savedPatron.getBorrowingRecords());
                 });
     }
 

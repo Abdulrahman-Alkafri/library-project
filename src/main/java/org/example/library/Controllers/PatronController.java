@@ -2,6 +2,7 @@ package org.example.library.Controllers;
 
 import jakarta.validation.Valid;
 import org.example.library.DTO.ApiResponse;
+import org.example.library.DTO.PatronDTOWithoutPassword;
 import org.example.library.DTO.UpdatePatronDTO;
 import org.example.library.Models.Patron;
 import org.example.library.Services.AuthService;
@@ -29,7 +30,7 @@ public class PatronController {
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAllPatrons() {
-        List<Patron> patrons = patronService.findAll();
+        List<PatronDTOWithoutPassword> patrons = patronService.findAll();
         return ResponseEntity.ok(new ApiResponse(true, "Patrons retrieved successfully", patrons));
     }
 
@@ -59,13 +60,13 @@ public class PatronController {
             authService.logout(jwtToken);
 
             // Step 2: Update the patron's data
-            Optional<Patron> updatedPatronOptional = patronService.updatePatron(id, updatedPatron);
+            Optional<PatronDTOWithoutPassword> updatedPatronOptional = patronService.updatePatron(id, updatedPatron);
             if (updatedPatronOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ApiResponse(false, "Patron not found", null));
             }
 
-            Patron updatedPatronEntity = updatedPatronOptional.get();
+            PatronDTOWithoutPassword updatedPatronEntity = updatedPatronOptional.get();
 
             // Step 3: Log in the user again (generate a new token)
             String newToken = JwtUtil.generateToken(updatedPatronEntity.getEmail());
