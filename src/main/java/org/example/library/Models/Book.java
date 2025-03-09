@@ -1,7 +1,7 @@
 package org.example.library.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -35,9 +35,10 @@ public class Book {
     @Size(min = 10, max = 13, message = "ISBN must be between 10 and 13 characters long")
     private String isbn;
 
-    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @JsonManagedReference("book-borrowing") // Explicit name to avoid conflicts
     private List<BorrowingRecord> borrowingRecords;
-    
-    @Column(name = "is_available") //Important, add annotation for column name
+
+    @Column(name = "is_available")
     private boolean available = true;  // Default to true
 }

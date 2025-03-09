@@ -1,14 +1,12 @@
 package org.example.library.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -36,6 +34,7 @@ public class Patron {
     @Column(name = "password")
     private String password;
 
+    @JsonManagedReference("patron-borrowing") // Explicit name to avoid conflicts
     @OneToMany(mappedBy = "patron", cascade = CascadeType.ALL)
     private List<BorrowingRecord> borrowingRecords;
 }

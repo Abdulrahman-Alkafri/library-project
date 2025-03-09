@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.POST,"/api/auth/login","/api/patrons")
                                 .permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/patrons","api/patrons/{id}")
+                                .requestMatchers(HttpMethod.GET,"/api/patrons","/api/patrons/{id}")
                                 .permitAll()
                                 .anyRequest().authenticated() // Secure the rest of the endpoints
                 )

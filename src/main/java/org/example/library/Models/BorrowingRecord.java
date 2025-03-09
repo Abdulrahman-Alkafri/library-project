@@ -1,11 +1,11 @@
 package org.example.library.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import org.example.library.Utils.ValidBorrowingDates;
 
@@ -17,18 +17,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "borrowing_records")
-@ValidBorrowingDates // custom validation to ensure borrowing date is before the return date
+@ValidBorrowingDates // Custom validation
 public class BorrowingRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @JsonBackReference("book-borrowing") // Explicit name to match with Book
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @NotNull
+    @JsonBackReference("patron-borrowing") // Explicit name to match with Patron
     @ManyToOne
     @JoinColumn(name = "patron_id", nullable = false)
     private Patron patron;
