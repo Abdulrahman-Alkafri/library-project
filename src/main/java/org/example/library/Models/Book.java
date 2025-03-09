@@ -23,21 +23,21 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Size(min = 0, max = 255, message = "title size must not exceed 255")
     private String title;
 
-    @NotBlank
     @Size(min = 3, max = 50, message = "author size must not exceed 50")
     private String author;
 
     @NotNull
     private int publicationYear;
 
-    @NotBlank
     @Size(min = 10, max = 13, message = "ISBN must be between 10 and 13 characters long")
     private String isbn;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<BorrowingRecord> borrowingRecords;
+    
+    @Column(name = "is_available") //Important, add annotation for column name
+    private boolean available = true;  // Default to true
 }

@@ -4,6 +4,7 @@ package org.example.library.Config;
 import org.example.library.Utils.JWT.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,9 +28,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/auth/login","api/patrons")
+                                .requestMatchers(HttpMethod.POST,"/api/auth/login","/api/patrons")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/patrons","api/patrons/{id}")
                                 .permitAll()
                                 .anyRequest().authenticated() // Secure the rest of the endpoints
                 )

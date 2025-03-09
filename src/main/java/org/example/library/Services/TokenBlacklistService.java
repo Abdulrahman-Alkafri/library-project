@@ -12,7 +12,6 @@ public class TokenBlacklistService {
     public TokenBlacklistService(TokenBlacklistRepository tokenBlacklistRepository) {
         this.tokenBlacklistRepository = tokenBlacklistRepository;
     }
-
     public void blacklistToken(String token) {
         TokenBlacklist blacklistedToken = new TokenBlacklist(token);
         tokenBlacklistRepository.save(blacklistedToken);

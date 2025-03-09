@@ -22,12 +22,12 @@ public class JwtUtil {
         this.tokenBlacklistService = tokenBlacklistService;
     }
 
-    public String generateToken(String email) {
+    public static String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, email);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private static String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(subject)

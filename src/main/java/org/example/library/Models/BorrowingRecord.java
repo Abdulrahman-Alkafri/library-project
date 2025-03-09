@@ -36,6 +36,5 @@ public class BorrowingRecord {
     @NotNull
     private LocalDate borrowDate;
 
-    @NotNull
     private LocalDate returnDate;
 }

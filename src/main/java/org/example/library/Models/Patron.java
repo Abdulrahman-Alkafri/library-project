@@ -2,6 +2,7 @@ package org.example.library.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,8 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "Patron")
 @Table(name = "patrons")
 public class Patron {
@@ -23,23 +25,17 @@ public class Patron {
     @Column(name = "id")
     private Long id;
 
-
-    @Column(name = "name",nullable = false,unique = true)
-    @NotBlank
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-
-    @Column(name = "email",nullable = false,unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     @Email
-    @NotBlank
     private String email;
 
+    @Size(min = 8, max = 255, message = "Password must be between 8 and 50 characters")
     @Column(name = "password")
-    @NotBlank
-    @Size(min = 6,max = 12,message = "password length must be in the range of (6 -> 12)")
-    @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy = "patron",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "patron", cascade = CascadeType.ALL)
     private List<BorrowingRecord> borrowingRecords;
 }
